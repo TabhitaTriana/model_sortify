@@ -1,28 +1,35 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
+from fastapi import FastAPI, File, UploadFile
+from fastapi.responses import JSONResponse
 import numpy as np
 from tensorflow.keras.models import load_model
-import os
-from pathlib import Path
+from tensorflow.keras.preprocessing import image
+from PIL import Image
+import io
 
 app = FastAPI()
 
-# Load model Keras saat server start
-BASE_DIR = Path(__file__).resolve().parent
-MODEL_PATH = BASE_DIR / "model_klasifikasi_sampah.keras"
+# Load model
+model = load_model("model_klasifikasi_sampah.h5")
+class_names = ['cardboard', 'glass', 'metal', 'organic', 'paper', 'plastic']  # ganti sesuai klasemu
 
-print(f"Looking for model at: {MODEL_PATH}")
-assert MODEL_PATH.exists(), "❌ Model file not found!"
-
-model = load_model(MODEL_PATH)
-# Sesuaikan input dengan fitur model kamu
-class InputData(BaseModel):
-    feature1: float
-    feature2: float
-    feature3: float
+# Preprocessing function
+def preprocess_image(file) -> np.ndarray:
+    img = Image.open(io.BytesIO(file)).convert("RGB")
+    img = img.resize((224, 224))
+    img_array = image.img_to_array(img)
+    img_array = img_array / 255.0  # normalisasi
+    img_array = np.expand_dims(img_array, axis=0)
+    return img_array
 
 @app.post("/predict")
-def predict(data: InputData):
-    input_array = np.array([[data.feature1, data.feature2, data.feature3]])
-    prediction = model.predict(input_array)
-    return {"prediction": prediction.tolist()}
+async def predict(file: UploadFile = File(...)):
+    content = await file.read()
+    img_array = preprocess_image(content)
+    prediction = model.predict(img_array)
+    predicted_class = class_names[np.argmax(prediction)]
+    confidence = float(np.max(prediction))
+    
+    return JSONResponse({
+        "predicted_class": predicted_class,
+        "confidence": round(confidence * 100, 2)
+    })
