@@ -5,10 +5,17 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 from PIL import Image
 import io
+import os
 
 app = FastAPI()
-import os
+
+# Endpoint sederhana untuk cek API hidup
+@app.get("/")
+def root():
+    return {"status": "API is running", "message": "Model is ready for prediction"}
+
 print("Isi folder saat ini:", os.listdir())
+
 # Load model
 model = load_model("model_klasifikasi_sampah.keras")
 class_names = ['cardboard', 'glass', 'metal', 'organic', 'paper', 'plastic']  # ganti sesuai klasemu
