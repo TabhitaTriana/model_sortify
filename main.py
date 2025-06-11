@@ -7,7 +7,8 @@ from PIL import Image
 import io
 
 app = FastAPI()
-
+import os
+print("Isi folder saat ini:", os.listdir())
 # Load model
 model = load_model("model_klasifikasi_sampah.keras")
 class_names = ['cardboard', 'glass', 'metal', 'organic', 'paper', 'plastic']  # ganti sesuai klasemu
