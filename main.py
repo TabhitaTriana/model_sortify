@@ -9,7 +9,7 @@ import io
 app = FastAPI()
 
 # Load model
-model = load_model("model_klasifikasi_sampah.h5")
+model = load_model("model_klasifikasi_sampah.keras")
 class_names = ['cardboard', 'glass', 'metal', 'organic', 'paper', 'plastic']  # ganti sesuai klasemu
 
 # Preprocessing function
