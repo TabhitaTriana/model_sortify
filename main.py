@@ -6,7 +6,7 @@ from tensorflow.keras.models import load_model
 app = FastAPI()
 
 # Load model Keras saat server start
-model = load_model("model.keras")
+model = load_model("model_klasifikasi_sampah.keras")
 
 # Sesuaikan input dengan fitur model kamu
 class InputData(BaseModel):
