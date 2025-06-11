@@ -9,23 +9,24 @@ import os
 
 app = FastAPI()
 
-# Endpoint sederhana untuk cek API hidup
 @app.get("/")
 def root():
     return {"status": "API is running", "message": "Model is ready for prediction"}
 
 print("Isi folder saat ini:", os.listdir())
 
-# Load model
-model = load_model("model_klasifikasi_sampah.keras")
-class_names = ['cardboard', 'glass', 'metal', 'organic', 'paper', 'plastic']  # ganti sesuai klasemu
+# Dapatkan path absolut ke model
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+model_path = os.path.join(BASE_DIR, "model_klasifikasi_sampah.keras")
+model = load_model(model_path)
 
-# Preprocessing function
+class_names = ['cardboard', 'glass', 'metal', 'organic', 'paper', 'plastic']
+
 def preprocess_image(file) -> np.ndarray:
     img = Image.open(io.BytesIO(file)).convert("RGB")
     img = img.resize((224, 224))
     img_array = image.img_to_array(img)
-    img_array = img_array / 255.0  # normalisasi
+    img_array = img_array / 255.0
     img_array = np.expand_dims(img_array, axis=0)
     return img_array
 
