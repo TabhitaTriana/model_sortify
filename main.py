@@ -13,11 +13,7 @@ app = FastAPI()
 def root():
     return {"status": "API is running", "message": "Model is ready for prediction"}
 
-print("Isi folder saat ini:", os.listdir())
-
-# Dapatkan path absolut ke model
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-model_path = os.path.join(BASE_DIR, "model_klasifikasi_sampah.keras")
+model_path = "model_klasifikasi_sampah.keras"
 model = load_model(model_path)
 
 class_names = ['cardboard', 'glass', 'metal', 'organic', 'paper', 'plastic']
