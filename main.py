@@ -38,3 +38,5 @@ async def predict(file: UploadFile = File(...)):
         "predicted_class": predicted_class,
         "confidence": round(confidence * 100, 2)
     })
+
+# test perubahan
