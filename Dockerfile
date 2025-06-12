@@ -1,15 +1,17 @@
 FROM python:3.12-slim
 
+# Set work directory
 WORKDIR /app
 
+# Install dependencies
 COPY requirements.txt .
-RUN python -m venv /opt/venv && \
-    . /opt/venv/bin/activate && \
-    pip install --upgrade pip && \
-    pip install -r requirements.txt
+RUN pip install --upgrade pip && pip install -r requirements.txt
 
-ENV PATH="/opt/venv/bin:$PATH"
-
+# Copy project files
 COPY . .
 
+# Expose port (optional for Railway)
+EXPOSE 8000
+
+# Run app
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
