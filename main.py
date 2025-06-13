@@ -6,7 +6,7 @@ from tensorflow.keras.preprocessing import image
 from PIL import Image
 import io
 import os
-import gdown
+import subprocess
 
 app = FastAPI()
 
@@ -16,11 +16,11 @@ def root():
 
 # === Download model from Google Drive if not exists ===
 model_path = "model_klasifikasi_sampah.h5"
-drive_url = "https://drive.google.com/uc?id=14N_orVJnO047XIJvqs7GMx3EHjPlNtLH"  # Ganti dengan ID Google Drive kamu
+drive_url = "https://drive.google.com/uc?export=download&id=14N_orVJnO047XIJvqs7GMx3EHjPlNtLH"  # Ganti dengan ID Google Drive kamu
 
 if not os.path.exists(model_path):
-    print("Downloading model from Google Drive...")
-    gdown.download(drive_url, model_path, quiet=False)
+    print("Downloading model using wget...")
+    subprocess.run(["wget", drive_url, "-O", model_path], check=True)
 
 # === Load the H5 model ===
 model = load_model(model_path)
@@ -46,7 +46,6 @@ async def predict(file: UploadFile = File(...)):
     prediction = model.predict(img_array)
     predicted_class = class_names[np.argmax(prediction)]
     confidence = float(np.max(prediction))
-
     return JSONResponse({
         "predicted_class": predicted_class,
         "confidence": round(confidence * 100, 2)
