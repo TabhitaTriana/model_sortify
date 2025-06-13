@@ -24,6 +24,7 @@ if not os.path.exists(model_path):
 
 # === Load the H5 model ===
 model = load_model(model_path)
+print("✅ Model loaded successfully!")
 
 # === Class Names ===
 class_names = ['cardboard', 'glass', 'metal', 'organic', 'paper', 'plastic']

@@ -10,6 +10,10 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 # Copy project files
 COPY . .
 
+RUN chmod +x start.sh
+
+CMD ["./start.sh"]
+
 # Expose port (optional for Railway)
 EXPOSE 8000
 
