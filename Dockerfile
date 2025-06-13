@@ -12,11 +12,8 @@ COPY . .
 
 RUN chmod +x start.sh
 
-CMD ["./start.sh"]
-
 # Expose port (optional for Railway)
 EXPOSE 8000
 
-# Run app
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]
 
+CMD ["./start.sh"]
